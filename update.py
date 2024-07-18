@@ -10,7 +10,7 @@ PHP_VERSIONS = {
     "default": "8.1",
 }
 APCU_VERSION = "5.1.23"
-VARIANTS = ["apache", "fpm", "fpm-alpine"]
+VARIANTS = ["apache"]
 ROOT_DIR = Path(__file__).parent
 
 APACHE_EXTRA = r"""
@@ -26,6 +26,18 @@ RUN set -eux; \
         echo "</Directory>"; \
     } > "$APACHE_CONFDIR/conf-available/short-url.conf"; \
     a2enconf short-url
+
+# Enable Upload security; see: https://www.mediawiki.org/wiki/Manual:Security#Upload_security
+RUN set -eux; \
+    { \
+        echo "<Directory /var/www/html/images>"; \
+        echo "  AllowOverride None"; \
+        echo "  AddType text/plain .html .htm .shtml .phtml"; \
+        echo "  php_admin_flag engine off"; \
+        echo "  Header set X-Content-Type-Options nosniff"; \
+        echo "</Directory>"; \
+    } > "$APACHE_CONFDIR/conf-available/upload-security.conf"; \
+    a2enconf upload-security
 
 # Enable AllowEncodedSlashes for VisualEditor
 RUN sed -i "s/<\/VirtualHost>/\tAllowEncodedSlashes NoDecode\n<\/VirtualHost>/" "$APACHE_CONFDIR/sites-available/000-default.conf"
