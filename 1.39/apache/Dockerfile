@@ -66,16 +66,32 @@ RUN set -eux; \
 	a2enconf short-url
 
 # Enable Upload security; see: https://www.mediawiki.org/wiki/Manual:Security#Upload_security
+# Disable Image folder listings; https://www.mediawiki.org/wiki/Manual:Image_authorization#Apache_-_Deny_the_directory_list
 RUN set -eux; \
+	a2enmod headers; \
 	{ \
 		echo "<Directory /var/www/html/images>"; \
 		echo "  AllowOverride None"; \
+		echo "  Options -Indexes"; \
 		echo "  AddType text/plain .html .htm .shtml .phtml"; \
 		echo "  php_admin_flag engine off"; \
 		echo "  Header set X-Content-Type-Options nosniff"; \
 		echo "</Directory>"; \
 	} > "$APACHE_CONFDIR/conf-available/upload-security.conf"; \
 	a2enconf upload-security
+
+# Enable Image authorization; see: https://www.mediawiki.org/wiki/Manual:Image_authorization
+RUN set -eux; \
+	{ \
+		echo "Alias /var/www/data/images/ /img_auth.php/"; \
+		echo "Alias /var/www/data/images /img_auth.php"; \
+		echo ""; \
+		echo "<Directory /var/www/data/images>"; \
+		echo "  AllowOverride None"; \
+		echo "  Deny from All"; \
+		echo "</Directory>"; \
+	} > "$APACHE_CONFDIR/conf-available/image-authorization.conf"; \
+	a2enconf image-authorization
 
 # Enable AllowEncodedSlashes for VisualEditor
 RUN sed -i "s/<\/VirtualHost>/\tAllowEncodedSlashes NoDecode\n<\/VirtualHost>/" "$APACHE_CONFDIR/sites-available/000-default.conf"
