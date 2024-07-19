@@ -3,6 +3,7 @@
 
 import argparse
 import functools
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -116,6 +117,8 @@ def main():
                 dockerfile.write_text(new)
                 print(f"Updated {branch}/{variant}")
                 updates.add(latest)
+            shutil.copy((ROOT_DIR / "entrypoint.sh"), vdir)
+
     if not updates:
         print("No changes")
         return
