@@ -40,6 +40,14 @@ RUN set -eux; \
     } > "$APACHE_CONFDIR/conf-available/upload-security.conf"; \
     a2enconf upload-security
 
+RUN set -eux; \
+    { \
+        echo "<Directory /var/www/html/mw-config>"; \
+        echo "  AllowOverride None"; \
+        echo "  Deny from All"; \
+        echo "</Directory>"; \
+    } > "$APACHE_CONFDIR/conf-available/disable-mw-config.conf"; \
+
 # Enable AllowEncodedSlashes for VisualEditor
 RUN sed -i "s/<\/VirtualHost>/\tAllowEncodedSlashes NoDecode\n<\/VirtualHost>/" "$APACHE_CONFDIR/sites-available/000-default.conf"
 """.rstrip().replace(
