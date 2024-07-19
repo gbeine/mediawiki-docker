@@ -3,6 +3,7 @@
 
 import argparse
 import functools
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -54,6 +55,14 @@ RUN set -eux; \
         echo "</Directory>"; \
     } > "$APACHE_CONFDIR/conf-available/image-authorization.conf"; \
     a2enconf image-authorization
+
+RUN set -eux; \
+    { \
+        echo "<Directory /var/www/html/mw-config>"; \
+        echo "  AllowOverride None"; \
+        echo "  Deny from All"; \
+        echo "</Directory>"; \
+    } > "$APACHE_CONFDIR/conf-available/disable-mw-config.conf";
 
 # Enable AllowEncodedSlashes for VisualEditor
 RUN sed -i "s/<\/VirtualHost>/\tAllowEncodedSlashes NoDecode\n<\/VirtualHost>/" "$APACHE_CONFDIR/sites-available/000-default.conf"
@@ -132,6 +141,8 @@ def main():
                 dockerfile.write_text(new)
                 print(f"Updated {branch}/{variant}")
                 updates.add(latest)
+            shutil.copy((ROOT_DIR / "entrypoint.sh"), vdir)
+
     if not updates:
         print("No changes")
         return
