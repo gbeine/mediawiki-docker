@@ -86,7 +86,7 @@ RUN set -eux; \
 		echo "Alias /var/www/data/images/ /img_auth.php/"; \
 		echo "Alias /var/www/data/images /img_auth.php"; \
 		echo ""; \
-		echo "<Directory /var/www/data/images>"; \
+		echo "<Directory /var/www/html/images>"; \
 		echo "  AllowOverride None"; \
 		echo "  Deny from All"; \
 		echo "</Directory>"; \
