@@ -75,8 +75,10 @@ RUN set -eux; \
 		echo "  Options -Indexes"; \
 		echo "  AddType text/plain .html .htm .shtml .phtml"; \
 		echo "  php_admin_flag engine off"; \
-		echo "  Header set X-Content-Type-Options nosniff"; \
 		echo "</Directory>"; \
+		echo "<Location /images>"; \
+		echo "  Header set X-Content-Type-Options nosniff"; \
+		echo "</Location>"; \
 	} > "$APACHE_CONFDIR/conf-available/upload-security.conf"; \
 	a2enconf upload-security
 
