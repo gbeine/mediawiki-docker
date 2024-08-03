@@ -72,6 +72,12 @@ RUN sed -i "s/<\/VirtualHost>/\tAllowEncodedSlashes NoDecode\n<\/VirtualHost>/" 
     "    ", "\t"
 )
 
+# Increase file upload limit
+RUN sed -i "s/<\/VirtualHost>/\tphp_admin_value file_uploads 1\n\tphp_admin_value upload_max_filesize 50M\n\tphp_admin_value post_max_size 50M\n<\/VirtualHost>/" "$APACHE_CONFDIR/sites-available/000-default.conf"
+""".rstrip().replace(
+    "    ", "\t"
+)
+
 
 @functools.lru_cache()
 def fetch_tags() -> list[str]:
