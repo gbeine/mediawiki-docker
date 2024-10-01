@@ -109,6 +109,9 @@ RUN set -eux; \
 # Enable AllowEncodedSlashes for VisualEditor
 RUN sed -i "s/<\/VirtualHost>/\tAllowEncodedSlashes NoDecode\n<\/VirtualHost>/" "$APACHE_CONFDIR/sites-available/000-default.conf"
 
+# Increase file upload limit
+RUN sed -i "s/<\/VirtualHost>/\tphp_admin_value file_uploads 1\n\tphp_admin_value upload_max_filesize 50M\n\tphp_admin_value post_max_size 50M\n<\/VirtualHost>/" "$APACHE_CONFDIR/sites-available/000-default.conf"
+
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
 RUN { \
@@ -125,7 +128,7 @@ RUN set -eux; \
 
 # Version
 ENV MEDIAWIKI_MAJOR_VERSION 1.42
-ENV MEDIAWIKI_VERSION 1.42.1
+ENV MEDIAWIKI_VERSION 1.42.3
 
 # MediaWiki setup
 RUN set -eux; \
