@@ -10,8 +10,8 @@ from pathlib import Path
 PHP_VERSIONS = {
     "default": "8.1",
 }
-APCU_VERSION = "5.1.23"
 VARIANTS = ["apache"]
+APCU_VERSION = "5.1.24"
 LUASANDBOX_VERSION = "4.1.2"
 ROOT_DIR = Path(__file__).parent
 
