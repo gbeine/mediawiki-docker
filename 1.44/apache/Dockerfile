@@ -33,7 +33,7 @@ RUN set -eux; \
 		opcache \
 	; \
 	\
-	pecl install APCu-5.1.24; \
+	pecl install APCu-5.1.27; \
 	pecl install LuaSandbox-4.1.2; \
 	docker-php-ext-enable \
 		apcu \
@@ -127,8 +127,8 @@ RUN set -eux; \
 	chown -R www-data:www-data /var/www/data
 
 # Version
-ENV MEDIAWIKI_MAJOR_VERSION 1.42
-ENV MEDIAWIKI_VERSION 1.42.6
+ENV MEDIAWIKI_MAJOR_VERSION=1.44
+ENV MEDIAWIKI_VERSION=1.44.0
 
 # MediaWiki setup
 RUN set -eux; \
@@ -152,9 +152,6 @@ RUN set -eux; \
 	; \
 	gpg --batch --verify mediawiki.tar.gz.sig mediawiki.tar.gz; \
 	tar -x --strip-components=1 -f mediawiki.tar.gz; \
-	[ 1.42.6 = "1.42.4" ] && \
-		sed -i 's|wikimedia/parsoid": "0.19.0"|wikimedia/parsoid": "0.19.1"|' \
-			composer.json; \
 	gpgconf --kill all; \
 	rm -r "$GNUPGHOME" mediawiki.tar.gz.sig mediawiki.tar.gz; \
 	chown -R www-data:www-data extensions skins cache images; \

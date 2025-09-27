@@ -11,7 +11,7 @@ PHP_VERSIONS = {
     "default": "8.1",
 }
 VARIANTS = ["apache"]
-APCU_VERSION = "5.1.24"
+APCU_VERSION = "5.1.27"
 LUASANDBOX_VERSION = "4.1.2"
 ROOT_DIR = Path(__file__).parent
 
